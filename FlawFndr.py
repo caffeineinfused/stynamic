@@ -28,7 +28,10 @@ class FlawFinder():
         mainArg += Args
         self.args = shlex.split(mainArg)
 
-
+    def runAnalysis(self):
+        anlys = subprocess.Popen(self.args, stdout=subprocess.PIPE)
+        anlys.wait()
+        self.outPut = anlys.stdout.read()
 
     def getOutPut(self):
         """Returns the output from running the analysis against a list of
