@@ -89,7 +89,7 @@ class FlawFinder():
 
 def main():
     ff = FlawFinder()
-    ff.setArgs('./client.c')
+    ff.setArgs('./testFiles/client.c')
     ff.runAnalysis()
     print('Before Parsing\n')
     print(ff.getOutPut())

@@ -1,0 +1,10 @@
+These are some files that I have been messing around with to make sure the wrappers are functioning as expected.
+
+Client.c is just some old file from a few years ago.
+
+I have created ValTest.c specifically for testing out the Memcheck function with Valgrind.
+
+Run makefile to make executable
+
+If done that way when running file ValgWrapper.py the main file will look for this file and run the analysis.
+	-ZF
