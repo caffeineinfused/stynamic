@@ -23,6 +23,7 @@ class FlawFinder():
         self.errOuts = {}
         self.fileName = []
         self.errFnd = None
+        self.errFnc = {}
 
     def setArgs(self, Args):
         """Sets the arguments to pass into flawfinder
@@ -79,23 +80,42 @@ class FlawFinder():
                     beg.end()+1:anlys.start()-1]
                 break
 
+        self.parseBadFnctn()
+
+    def parseBadFnctn(self):
+        fncFndr = re.compile(r'(\w+):')
+        for key, val in self.errOuts.items():
+            fnc = fncFndr.search(val)
+            if fnc is not None:
+                self.errFnc[key] = fnc.group(1)
+
     def printErrors(self):
+        #This function was the make sure the regex worked for finding error fnc
         for lineNum, err in self.errOuts.items():
             print('\nError at line number {}\n'.format(str(lineNum)))
             print(err)
 
 
+    def printFnc(self):
+        #This function was to make sure the regex worked for finding file name
+        for line, fnc in self.errFnc.items():
+            print('\nFunction {} error at line {}\n'.format(fnc, str(line)))
 
+
+    def printFileNames(self):
+        print('\n')
+        for fl in self.fileName:
+            print(fl)
 
 def main():
     ff = FlawFinder()
-    ff.setArgs('./testFiles/client.c')
+    ff.setArgs('./testFiles/ValTest.c')
     ff.runAnalysis()
     print('Before Parsing\n')
     print(ff.getOutPut())
     ff.parseOutput()
     print('\nAfter Parsing\n')
     ff.printErrors()
-
-
+    ff.printFnc()
+    ff.printFileNames()
 if __name__ == '__main__':main()
