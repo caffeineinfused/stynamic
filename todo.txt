@@ -1,2 +1,11 @@
 To-Do
 	note delineation between our work/code and flawfinder/valgrind/clang/etc
+	Stynamic
+		flags
+			-f file list (can be taken multiple times) (ff)
+			-m makefile (vg)
+			-a auto file (exclusive from -f, propose file list automatically) (ff)
+			-v verbose (lots of output)
+			-q quick (little output, no false positives)
+			
+			
