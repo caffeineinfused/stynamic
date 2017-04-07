@@ -3,9 +3,9 @@ To-Do
 	Stynamic
 		flags
 			-f file list (can be taken multiple times) (ff)
-			-m makefile (vg)
+			-m makefile (exclusive from -b and -g) (vg)
 			-a auto file (exclusive from -f, propose file list automatically) (ff)
 			-v verbose (lots of output)
 			-q quick (little output, no false positives)
-			
-			
+			-b binary (vg)
+			-g binary args (optional, must be with -b) (vg)
