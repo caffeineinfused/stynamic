@@ -26,22 +26,23 @@ class Stynamic():
 		print self.flags
 		print self.valg_flags
 	def instValgWrapper(self):
+		print self.flags['b']
 		self.vl.setProg(self.flags['b'])
 		self.vl.setArgs(self.valg_flags)
 	def RunValg(self):
-		    print('\nRunning analysis\n')
-		    print('Memcheck-No tool Options')
-		    self.vl.runAnlys('mem')
-		    print('\nResults\n')
-		    print(self.vl.getMemResults())
-		    print('Memcheck- tool opt - Leak-Check=Full')
-		    self.vl.runAnlys('mem', {'lk_ch':'full'})
-		    print('\nResults\n')
-		    print(self.vl.getMemResults())
-		    print('Memcheck- tool opt - Leak-Check=Full with error flag True')
-		    self.vl.runAnlys('mem', {'lk_ch':'full'}, True)
-		    print('\nResults\n')
-		    print(self.vl.getMemResults())
+		print('\nRunning analysis\n')
+		print('Memcheck-No tool Options')
+		self.vl.runAnlys('mem')
+		print('\nResults\n')
+		print(self.vl.getMemResults())
+		print('Memcheck- tool opt - Leak-Check=Full')
+		self.vl.runAnlys('mem', {'lk_ch':'full'})
+		print('\nResults\n')
+		print(self.vl.getMemResults())
+		print('Memcheck- tool opt - Leak-Check=Full with error flag True')
+		self.vl.runAnlys('mem', {'lk_ch':'full'}, True)
+		print('\nResults\n')
+		print(self.vl.getMemResults())
 
 def main():
 	Styn = Stynamic()
