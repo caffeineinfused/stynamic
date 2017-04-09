@@ -1,2 +1,8 @@
 CSCI 5800 - Cybersecurity Programming Project Spring 2017
 Anthony, Zack, Cory
+
+Before running program in a Kali environment, run on the command line:
+   $ sudo apt-get install flawfinder
+   $ sudo apt-get install valgrind
+
+Program must be compiled with gcc using the -g flag
