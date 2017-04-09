@@ -1,49 +1,40 @@
 #!/usr/bin/python
 import argparse
 import FlawFndr
+import sys
 
 class Stynamic():
-	
-
+	flags = []
 	def parseOpts(self):
-		parser = argparse.ArgumentParser(description = "Stynamic")
-		group0 = parser.add_mutually_exclusive_group()
-		group0.add_argument('-v', metavar='verbose', action='store_true', help='verbose output, exclusive from -q')
-		group0.add_argument('-q', metavar='quick', action='store_true', help='quick output, exclusive from -v')
-		group0.add_argument('-d', action='store_true')
+		group0.add_argument('-v', action='store_true', help='Select verbose output')
+		group0.add_argument('-q', action='store_true', help='Select quiet output')
+		group0.add_argument('-d', action='store_true', help='Select default output')
 
 		group1 = parser.add_argument_group()
-		group1.add_argument('-m', metavar='makefile', action='store', help='path to makefile')
-		group1.add_argument('-b', metavar='binary', action='store', help='path to binary')
+		group1.add_argument('-m', metavar='makefile', action='store', help='Specify makefile location to augment for running with Stynamic')
+		group1.add_argument('-b', metavar='binary', action='store', help='Specify binary location for running with Stynamic')
 
 		group2 = parser.add_mutually_exclusive_group()
-		group2.add_argument('-a', action='store_true', help='auto file list, exclusive from -f, proposes file list', required=False)
-		group2.add_argument('-f', metavar='files', nargs='+', action='append', help='file list (can be taken multiple times)', required=False)
-		parser.parse_known_args()
+		group2.add_argument('-a', action='store_true', required=False, help='Have Stynamic automatically determine source file list')
+		group2.add_argument('-f', metavar='file', nargs='+', action='append',required=False,help='Specify files for Stynamic to check')
+		flags = parser.parse_known_args(sys.argv[1:])
+		print flags
 
-	#def instValgWrapper():
+	def instValgWrapper():
+		#vl = ValWrap()
+		#vl.setProg('./testFiles/ValTester')
+		#vl.setArgs
 
-	#def setQuickFlags():
-
-	#def setVerboseFlags():
-
-	def setFFVerboseFlags(self):
-		return '-n -m 0 --followdotdir'
-
-	def setFFQuickFlags(self):
-		return '-F -m 4'
-
-	def setFFDefaultFlags(self):
-		return ''
 
 	def instFlawfWrapper(self):
 		ffargs = '-c'
 
 		if (verbose):
-			ffargs += setFFVerboseFlags()
+			ffargs += '-n -m 0 --followdotdir'
 		elif (quick):
-			ffargs += setFFQuickFlags()
-		else:
+			ffargs += '-F -m 4'
+		else:	#default
+			ffargs += ''
 
 		fw = FlawFndr.FlawFinder()
 
@@ -51,6 +42,7 @@ class Stynamic():
 def main():
 	Styn = Stynamic()
 	Styn.parseOpts()
-	Styn.instFlawfWrapper()
+	#Styn.instValgWrapper()
+	#Styn.instFlawfWrapper()
 
 if __name__ == '__main__': main()
