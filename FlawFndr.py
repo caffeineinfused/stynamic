@@ -18,12 +18,26 @@ class FlawFinder():
     cppFinder = re.compile(r"\w+.cpp")
 
     def __init__(self):
-        self.args = None
+        self.args = 'flawfinder '
         self.outPut = None
         self.errOuts = {}
         self.fileName = []
         self.errFnd = None
         self.errFnc = {}
+        self.flags = False
+
+
+    def setFlags(self, flags):
+        """Sets flags for flawfinder
+
+        Returns nothing
+
+        Keyword Arguments:
+            flags -- a string consisting of flags for flawfinder
+        """
+        flgArg = self.args + flags
+        self.flags = True
+        self.args = shlex.split(flgArg)
 
     def setArgs(self, Args):
         """Sets the arguments to pass into flawfinder
@@ -34,8 +48,11 @@ class FlawFinder():
             Args -- string that inludes the names of the files to run against
                     flawfinder
         """
-        mainArg = 'flawfinder '
-        mainArg += Args
+        mainArg = ''
+        if self.flags:
+            mainArg = self.args + Args
+        else:
+            mainArg = 'flawfinder ' + Args
         print(mainArg)
         self.errFnd = re.compile("("+Args+"):(\d+):")
         cFiles = self.cFileFinder.findall(Args)
