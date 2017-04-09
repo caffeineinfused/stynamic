@@ -6,9 +6,9 @@ import sys
 class Stynamic():
 	flags = []
 	def parseOpts(self):
-		group0.add_argument('-v', action='store_true', help='Select verbose output')
-		group0.add_argument('-q', action='store_true', help='Select quiet output')
-		group0.add_argument('-d', action='store_true', help='Select default output')
+		group0.add_argument('-v', metavar='verbose', action='store_true', help='Select verbose output')
+		group0.add_argument('-q', metavar='quick', action='store_true', help='Select quiet output')
+		group0.add_argument('-d', metavar='default', action='store_true', help='Select default output')
 
 		group1 = parser.add_argument_group()
 		group1.add_argument('-m', metavar='makefile', action='store', help='Specify makefile location to augment for running with Stynamic')
@@ -34,7 +34,10 @@ class Stynamic():
 		elif (quick):
 			ffargs += '-F -m 4'
 		else:	#default
-			ffargs += ''
+			ffargs += '-m 1'
+
+		if (makefile):
+			
 
 		fw = FlawFndr.FlawFinder()
 
