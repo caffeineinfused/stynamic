@@ -9,3 +9,7 @@ To-Do
 			-q quick (little output, no false positives)
 			-b binary (vg)
 			-g binary args (optional, must be with -b) (vg)
+		side by side line attribution
+			get output from flawfinder and valgrind and show it side by side, allowing users of Stynamic to scroll the errors those find while having them attributed by line
+			to do this, add the 'xml=yes' arg when running valgrind, and add 'xml-fd=N' where N is the file descriptor (e.g., 1 for stdout)
+			

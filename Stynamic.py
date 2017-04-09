@@ -30,6 +30,7 @@ class Stynamic():
 		print(self.valg_flags)
 	
 	def instValgWrapper(self):
+		print self.flags['b']
 		self.vl.setProg(self.flags['b'])
 		self.vl.setArgs(self.valg_flags)
 	
@@ -73,7 +74,6 @@ class Stynamic():
 		self.fw.printErrors()
 		self.fw.printFnc()
 		self.fw.printFileNames()
-		
 
 def main():
 	Styn = Stynamic()
