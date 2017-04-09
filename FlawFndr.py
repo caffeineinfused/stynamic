@@ -37,7 +37,7 @@ class FlawFinder():
         """
         flgArg = self.args + flags
         self.flags = True
-        self.args = shlex.split(flgArg)
+        self.args = flgArg
 
     def setArgs(self, Args):
         """Sets the arguments to pass into flawfinder

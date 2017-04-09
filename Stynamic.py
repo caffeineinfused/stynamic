@@ -30,7 +30,7 @@ class Stynamic():
 		print(self.valg_flags)
 	
 	def instValgWrapper(self):
-		print self.flags['b']
+		print(self.flags['b'])
 		self.vl.setProg(self.flags['b'])
 		self.vl.setArgs(self.valg_flags)
 	
@@ -50,21 +50,22 @@ class Stynamic():
 		print(self.vl.getMemResults())
 
 	def instFlawfWrapper(self):
-		ffargs = '-c '
+		ffflags ='-c '
+		ffargs = ''
 
 		if (self.flags['v']):
-			ffargs += '-n -m 0 --followdotdir '
+			ffflags += '-n -m 0 --followdotdir '
 		elif (self.flags['q']):
-			ffargs += '-F -m 4 '
+			ffflags += '-F -m 4 '
 		else:	#default
-			ffargs += '-m 1 '
+			ffflags += '-m 1 '
 
 		if (not self.flags['d']):
-			#ffargs += self.flags['f']
-			ffargs +='./testFiles/ValTest.c'
+			ffargs += self.flags['f'][0][0]
 		else:
 			ffargs += './testFiles/ValTest.c' #try to detect files in current directory
 
+		self.fw.setFlags(ffflags)
 		self.fw.setArgs(ffargs)
 		self.fw.runAnalysis()
 		print('\nBefore Parsing\n')
@@ -78,8 +79,8 @@ class Stynamic():
 def main():
 	Styn = Stynamic()
 	Styn.parseOpts()
-	Styn.instValgWrapper()
-	Styn.RunValg()
+	#Styn.instValgWrapper()
+	#Styn.RunValg()
 	Styn.instFlawfWrapper()
 
 if __name__ == '__main__': main()
