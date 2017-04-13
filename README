@@ -1,8 +1,15 @@
 CSCI 5800 - Cybersecurity Programming Project Spring 2017
 Anthony, Zack, Cory
 
+About:
+Stynamic detects potential code vulnerabilities in C++ code and provides references to the potentially vulnerable code through Static (using the Flawfinder tool) and Dynamic analysis (using the Valgrind tool). As most tools utilize only Static or Dynamic analysis, Stynamic allows for a very simple interface that provides a more complete picture of the potentially vulnerable code. Output can be specified as Quiet, -q flag, (minimum amount of output, avoids many potential false-positives), Default, -d flag (medium amount of output), or Verbose, -v flag (maximum amount of output).
+
+
+Usage:
+
 Before running program in a Kali environment, run on the command line:
    $ sudo apt-get install flawfinder
    $ sudo apt-get install valgrind
 
 Program must be compiled with gcc using the -g flag
+

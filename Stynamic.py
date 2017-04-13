@@ -11,11 +11,11 @@ class Stynamic():
 	fw = FlawFndr.FlawFinder()
 	
 	def parseOpts(self):
-		parser = argparse.ArgumentParser(description = "Stynamic")
+		parser = argparse.ArgumentParser(prog="Stynamic", description = "Code vulnerability detection program that gets output from Static (from Flawfinder) and Dynamic (from Valgrind) code analysis of C++ code. Requires path to makefile or executeable code compiled with gcc using the -g flag for complete results.")
 		group0 = parser.add_mutually_exclusive_group()
-		group0.add_argument('-v', action='store_true', help='Select verbose output')
-		group0.add_argument('-q', action='store_true', help='Select quiet output')
-		group0.add_argument('-d', action='store_true', help='Select default output')
+		group0.add_argument('-q', action='store_true', help='Quiet level of output (Minimum) - exclusive from other output levels')
+		group0.add_argument('-d', action='store_true', help='Default level of output (Medium) - exclusive from other output levels')
+		group0.add_argument('-v', action='store_true', help='Verbose level of output (Maximum) - exclusive from other other levels')
 
 		group1 = parser.add_argument_group()
 		group1.add_argument('-m', metavar='makefile', action='store', help='Specify makefile location to augment for running with Stynamic')
@@ -53,11 +53,11 @@ class Stynamic():
 		ffflags ='-c '
 		ffargs = ''
 
-		if (self.flags['v']):
+		if (self.flags['v']): #verbose level of output
 			ffflags += '-n -m 0 --followdotdir '
-		elif (self.flags['q']):
+		elif (self.flags['q']): #quiet level of output
 			ffflags += '-F -m 4 '
-		else:	#default
+		else:	#default level of output - medium
 			ffflags += '-m 1 '
 
 		if (not self.flags['d']):
@@ -68,8 +68,8 @@ class Stynamic():
 		self.fw.setFlags(ffflags)
 		self.fw.setArgs(ffargs)
 		self.fw.runAnalysis()
-		print('\nBefore Parsing\n')
-		print(self.fw.getOutPut())
+		#print('\nBefore Parsing\n')
+		#print(self.fw.getOutPut())
 		self.fw.parseOutput()
 		print('\nAfter Parsing\n')
 		self.fw.printErrors()
