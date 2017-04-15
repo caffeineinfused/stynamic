@@ -14,6 +14,8 @@ To-Do
 			implement the "auto file" function
 			implement the makefile option (or remove flag)
 			make sure useful error messages are displayed when bad arg options are provided
+		xml
+			make valgwrapper ask for XML output and return that to stynamic in a useful way
 		test
 			run unit tests on different source to verify parsing always works
 		side by side line attribution
