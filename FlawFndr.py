@@ -19,13 +19,14 @@ class FlawFinder():
 
     def __init__(self):
         self.args = 'flawfinder '
+        self.noErrors = False
+        self.noErrMsg = 'Congratulations no errors found by flawfinder'
         self.outPut = None
         self.errOuts = {}
         self.fileName = []
         self.errFnd = None
         self.errFnc = {}
         self.flags = False
-
 
     def setFlags(self, flags):
         """Sets flags for flawfinder
@@ -82,6 +83,9 @@ class FlawFinder():
         frst = False
         pos = 0
         beg = self.errFnd.search(self.outPut)
+        if not beg:
+            self.noErrors = True
+            return
         while(True):
             endEr = self.errFnd.search(self.outPut, beg.end())
             if endEr is not None:
@@ -90,7 +94,9 @@ class FlawFinder():
                     beg.end()+1:endEr.start()-1]
                 beg = self.errFnd.search(self.outPut, endEr.end()+1)
                 if not beg:
-                    self.errOuts[endEr.group(2)] = self.outPut[endEr.end()+1:anlys.start()-1]
+                    self.errOuts[
+                        endEr.group(2)] = self.outPut[
+                        endEr.end()+1:anlys.start()-1]
                     break
             else:
                 self.errOuts[
@@ -108,22 +114,27 @@ class FlawFinder():
                 self.errFnc[key] = fnc.group(1)
 
     def printErrors(self):
-        #This function was the make sure the regex worked for finding error fnc
-        for lineNum, err in self.errOuts.items():
-            print('\nError at line number {}\n'.format(str(lineNum)))
-            print(err)
-
+        # This function was the make sure the regex worked for finding error fnc
+        if self.noErrors:
+            print(self.noErrMsg)
+        else:
+            for lineNum, err in self.errOuts.items():
+                print('\nError at line number {}\n'.format(str(lineNum)))
+                print(err)
 
     def printFnc(self):
-        #This function was to make sure the regex worked for finding file name
-        for line, fnc in self.errFnc.items():
-            print('\nFunction {} error at line {}\n'.format(fnc, str(line)))
-
+        # This function was to make sure the regex worked for finding file name
+        if self.noErrors:
+            print(self.noErrMsg)
+        else:
+            for line, fnc in self.errFnc.items():
+                print('\nFunction {} error at line {}\n'.format(fnc, str(line)))
 
     def printFileNames(self):
         print('\n')
         for fl in self.fileName:
             print(fl)
+
 
 def main():
     ff = FlawFinder()
@@ -136,4 +147,5 @@ def main():
     ff.printErrors()
     ff.printFnc()
     ff.printFileNames()
-if __name__ == '__main__':main()
+if __name__ == '__main__':
+    main()

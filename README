@@ -7,9 +7,20 @@ Stynamic detects potential code vulnerabilities in C++ code and provides referen
 
 Usage:
 
+There are two options that can be made to run stynamic.
+
+If internet connection is available run follow option 1, otherwise follow directions for option 2.
+
+Option 1:
 Before running program in a Kali environment, run on the command line:
    $ sudo apt-get install flawfinder
    $ sudo apt-get install valgrind
+
+Option 2:
+Before running stynamic, to install that required packages, run the following commands from inside the stynamic package:
+   $ sudo ./SetUp
+
+
 
 Program must be compiled with gcc using the -g flag
 
