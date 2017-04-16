@@ -2,7 +2,7 @@
 import re
 import subprocess
 import shlex
-
+import xml.etree.ElementTree as ET    
 mem_opts = {  # Options in comments
     'lk_ch': '--leak-check=',  # no|summary|yes|fill def-Sum
     'lk_res': '--leak-resolution=',  # low|med|high def-high
@@ -73,6 +73,15 @@ drd_opts = {
     'ig_th': '--ignore-thread-creation=',  # yes|no def - no
 }
 
+class ValgError:
+    kind = ""
+    what = ""
+    line = ""
+    
+    def __init__(self, kind, what, line):
+        self.kind = kind
+        self.what = what
+        self.line = line
 
 class ValWrap():
     """Class ValWrap that calls valgrind and parses output
@@ -160,7 +169,7 @@ class ValWrap():
         self.tool = tool
         args = ' '.join(self.pArgs)
         valArg = self.pName + ' ' + args
-        valArgs = self.val + ' --tool='
+        valArgs = self.val + ' --xml=yes --xml-fd=2 --tool='
         if tool == 'mem':
             valArgs += self.memCh+' '
             for key, val in tool_opts.items():
@@ -212,6 +221,26 @@ class ValWrap():
         """
         return self.memOut
 
+    def parseOutput(self):
+        root = ET.fromstring(self.memOut)
+        errlist = []
+        kind = ""
+        what = ""
+        line = ""
+        for tag in root.findall('error'):
+            kind = tag.find('kind').text
+            if tag.find('what') is not None:
+                    what = tag.find('what').text
+            elif tag.find('xwhat') is not None:
+                    what = tag.find('xwhat').find('text').text
+            sta = tag.find('stack')
+            for frame in sta.findall('frame'):
+                if frame.find('line') is not None:
+                    line = frame.find('line').text
+                    break
+            errlist.append(ValgError(kind, what, line))
+        for err in errlist:
+            print (err.kind + ' ' + err.what + ' at ' + err.line + "\n")
 
 def main():
     vl = ValWrap()
@@ -229,8 +258,8 @@ def main():
     print('Memcheck- tool opt - Leak-Check=Full with error flag True')
     vl.runAnlys('mem', {'lk_ch': 'full'}, True)
     print('\nResults\n')
-    print(vl.getMemResults())
-
+    #print(vl.getMemResults())
+    vl.parseOutput()
 
 
 if __name__ == '__main__':
