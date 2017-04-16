@@ -72,8 +72,8 @@ class Stynamic():
         print('Memcheck- tool opt - Leak-Check=Full with error flag True')
         self.vl.runAnlys('mem', {'lk_ch': 'full'}, True)
         print('\nResults\n')
-        print(self.vl.getMemResults())
-
+        #print(self.vl.getMemResults())
+        self.vl.parseOutput()
     def instFlawfWrapper(self):
         ffflags = '-c '
         ffargs = ''
@@ -107,8 +107,8 @@ class Stynamic():
 def main():
     Styn = Stynamic()
     Styn.parseOpts()
-    # Styn.instValgWrapper()
-    # Styn.RunValg()
+    Styn.instValgWrapper()
+    Styn.RunValg()
     Styn.instFlawfWrapper()
 
 if __name__ == '__main__':
