@@ -1,0 +1,5 @@
+# .pyc files
+*.pyc
+
+# vgcore files
+vgcore.*
