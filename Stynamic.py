@@ -72,6 +72,7 @@ class Stynamic():
             self.noFiles = True
         print(self.flags)
         print(self.valg_flags)
+        return parser
 
     def instValgWrapper(self):
 
@@ -187,16 +188,20 @@ class Stynamic():
 
 def main():
     Styn = Stynamic()
-    Styn.parseOpts()
-    Styn.instValgWrapper()
-    Styn.RunValg()
+    parser = Styn.parseOpts()
+    if(Styn.flags['b'] == None and not(Styn.flags['a'] != None or Styn.flags['f'] != None)):
+        parser.print_help()
 
+    if(Styn.flags['b'] != None):
+        Styn.instValgWrapper()
+        Styn.RunValg()
 
-    list = Styn.flawFileList()
-    for file in list:
-        Styn.fw = FlawFndr.FlawFinder()
-        Styn.instFlawfWrapper(file)
-    Styn.prtyPrntOutBth()
+    if(Styn.flags['a'] != None or Styn.flags['f'] != None):
+        list = Styn.flawFileList()
+        for file in list:
+            Styn.fw = FlawFndr.FlawFinder()
+            Styn.instFlawfWrapper(file)
+        Styn.prtyPrntOutBth()
 
 if __name__ == '__main__':
     main()
