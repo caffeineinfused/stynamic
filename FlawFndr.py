@@ -23,7 +23,7 @@ class FlawFinder():
         self.noErrMsg = 'Congratulations no errors found by flawfinder'
         self.outPut = None
         self.errOuts = {}
-        self.fileName = []
+        self.fileName = ""
         self.errFnd = None
         self.errFnc = {}
         self.flags = False
@@ -56,12 +56,15 @@ class FlawFinder():
             mainArg = 'flawfinder ' + Args
         print(mainArg)
         self.errFnd = re.compile("("+Args+"):(\d+):")
-        cFiles = self.cFileFinder.findall(Args)
-        hFiles = self.cHdrFinder.findall(Args)
-        cppFiles = self.cppFinder.findall(Args)
-        self.fileName.extend(cFiles)
-        self.fileName.extend(hFiles)
-        self.fileName.extend(cppFiles)
+        cFiles = self.cFileFinder.search(Args)
+        hFiles = self.cHdrFinder.search(Args)
+        cppFiles = self.cppFinder.search(Args)
+        if(cFiles != None):
+            self.fileName = cFiles
+        if(hFiles != None):
+            self.fileName = hFiles
+        if(cppFiles != None):
+            self.fileName = cppFiles
         self.args = shlex.split(mainArg)
 
     def runAnalysis(self):
@@ -119,7 +122,7 @@ class FlawFinder():
         return self.errOuts
 
     def getFileName(self):
-        return self.fileName.pop()
+        return self.fileName
 
     def printFnc(self):
         # This function was to make sure the regex worked for finding file name
@@ -131,8 +134,7 @@ class FlawFinder():
 
     def printFileNames(self):
         print('\n')
-        for fl in self.fileName:
-            print(fl)
+        print(self.fileName)
 
 
 def main():

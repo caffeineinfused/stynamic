@@ -83,7 +83,8 @@ class Stynamic():
 
         print(self.flags['b'])
         self.vl.setProg(self.flags['b'])
-        self.vl.setArgs(self.flags['ba'])
+        if(self.flags['ba'] != None):
+            self.vl.setArgs(self.flags['ba'])
 
     def RunValg(self):
         #print('\nRunning analysis\n')
@@ -167,7 +168,7 @@ class Stynamic():
             valOut[f] = valD
 
         for fl, err in flawOut.items():
-            print(fl + ' ')
+            print(fl.group(0) + ' ')
             print(err)
 
         for fl, err in valOut.items():
@@ -197,7 +198,7 @@ def main():
     for file in list:
         Styn.fw = FlawFndr.FlawFinder()
         Styn.instFlawfWrapper(file)
-        Styn.prtyPrntOutBth()
+    Styn.prtyPrntOutBth()
 
 if __name__ == '__main__':
     main()
