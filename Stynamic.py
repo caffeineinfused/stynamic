@@ -7,6 +7,7 @@ import os, fnmatch
 from ValgWrapper import ValWrap
 from itertools import zip_longest
 
+
 class Stynamic():
     flags = []
     valg_flags = []
@@ -167,7 +168,8 @@ class Stynamic():
             valOut[f] = valD
 
         for fl, err in flawOut.items():
-            print(fl.group(0) + ' ')
+            if(not isinstance(fl, str)):
+                print(fl.group(0) + ' ')
             print(err)
 
         for fl, err in valOut.items():
