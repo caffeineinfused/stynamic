@@ -2,12 +2,14 @@
 import argparse
 import FlawFndr
 import sys
+from collections import defaultdict
 from ValgWrapper import ValWrap
 
 
 class Stynamic():
     flags = []
     valg_flags = []
+    flaw_instn = []
     noFiles = False
     vl = ValWrap()
     fw = FlawFndr.FlawFinder()
@@ -35,6 +37,10 @@ class Stynamic():
             '-b', metavar='binary', action='store',
             help='Specify binary location for running with Stynamic')
 
+        group1.add_argument(
+            '-ba', metavar='binary arguments', action='store', required=False,
+            help='If binary requires arguments specify here')
+
         group2 = parser.add_mutually_exclusive_group()
         group2.add_argument(
             '-a', action='store_true', required=False,
@@ -53,27 +59,28 @@ class Stynamic():
         print(self.valg_flags)
 
     def instValgWrapper(self):
-        if self.noFiles:
-            print('No files give, please rerun stynamic with a list of files.')
+#        if self.noFiles:
+#            print('No files give, please rerun stynamic with a list of files.')
         print(self.flags['b'])
         self.vl.setProg(self.flags['b'])
-        self.vl.setArgs(self.valg_flags)
+        self.vl.setArgs(self.flags['ba'])
 
     def RunValg(self):
-        print('\nRunning analysis\n')
-        print('Memcheck-No tool Options')
-        self.vl.runAnlys('mem')
-        print('\nResults\n')
-        print(self.vl.getMemResults())
-        print('Memcheck- tool opt - Leak-Check=Full')
+        #print('\nRunning analysis\n')
+        #print('Memcheck-No tool Options')
+#        self.vl.runAnlys('mem')
+#        print('\nResults\n')
+#        print(self.vl.getMemResults())
+#        print('Memcheck- tool opt - Leak-Check=Full')
         self.vl.runAnlys('mem', {'lk_ch': 'full'})
-        print('\nResults\n')
-        print(self.vl.getMemResults())
-        print('Memcheck- tool opt - Leak-Check=Full with error flag True')
-        self.vl.runAnlys('mem', {'lk_ch': 'full'}, True)
-        print('\nResults\n')
+#        print('\nResults\n')
+#        print(self.vl.getMemResults())
+#        print('Memcheck- tool opt - Leak-Check=Full with error flag True')
+#        self.vl.runAnlys('mem', {'lk_ch': 'full'}, True)
+#        print('\nResults\n')
         #print(self.vl.getMemResults())
         self.vl.parseOutput()
+
     def instFlawfWrapper(self):
         ffflags = '-c '
         ffargs = ''
@@ -99,9 +106,35 @@ class Stynamic():
         # print(self.fw.getOutPut())
         self.fw.parseOutput()
         print('\nAfter Parsing\n')
-        self.fw.printErrors()
-        self.fw.printFnc()
-        self.fw.printFileNames()
+       # self.fw.printErrors()
+       # self.fw.printFnc()
+       # self.fw.printFileNames()
+        self.flaw_instn.append(self.fw)
+
+    def prtyPrntOutBth(self):
+        flawOut = {}
+        valD = {}
+        valOut = defaultdict(list)
+        for flwIn in self.flaw_instn:
+            flawOut[flwIn.getFileName()] = flwIn.getParsedErrors()
+
+        print(self.vl.errorList)
+        for valIn in self.vl.errorList:
+            print('VAL OUTPUT!')
+            print(valIn)
+            k, w, l, f = valIn
+            print(f)
+            print(l + " " + w + " " + k)
+            valD[l] = k + " : " + w
+            valOut[f].append(valD)
+
+        for fl, err in flawOut.items():
+            print(fl + ' ')
+            print(err)
+
+        for fl, err in valOut.items():
+            print(fl+ ' ')
+            print(err)
 
 
 def main():
@@ -110,6 +143,7 @@ def main():
     Styn.instValgWrapper()
     Styn.RunValg()
     Styn.instFlawfWrapper()
+    Styn.prtyPrntOutBth()
 
 if __name__ == '__main__':
     main()

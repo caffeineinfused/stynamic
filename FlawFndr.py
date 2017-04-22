@@ -80,8 +80,6 @@ class FlawFinder():
     def parseOutput(self):
         endAnalys = re.compile(r'ANALYSIS SUMMARY:')
         anlys = endAnalys.search(self.outPut)
-        frst = False
-        pos = 0
         beg = self.errFnd.search(self.outPut)
         if not beg:
             self.noErrors = True
@@ -116,6 +114,12 @@ class FlawFinder():
             for lineNum, err in self.errOuts.items():
                 print('\nError at line number {}\n'.format(str(lineNum)))
                 print(err)
+
+    def getParsedErrors(self):
+        return self.errOuts
+
+    def getFileName(self):
+        return self.fileName.pop()
 
     def printFnc(self):
         # This function was to make sure the regex worked for finding file name

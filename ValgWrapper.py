@@ -2,7 +2,7 @@
 import re
 import subprocess
 import shlex
-import xml.etree.ElementTree as ET    
+import xml.etree.ElementTree as ET
 mem_opts = {  # Options in comments
     'lk_ch': '--leak-check=',  # no|summary|yes|fill def-Sum
     'lk_res': '--leak-resolution=',  # low|med|high def-high
@@ -82,7 +82,7 @@ class ValgError:
         self.kind = kind
         self.what = what
         self.line = line
-	self.file = file
+        self.file = file
 
 class ValWrap():
     """Class ValWrap that calls valgrind and parses output
@@ -131,6 +131,7 @@ class ValWrap():
         self.pArgs = []  # Program arguments
         self.Output = ''  # Output pre parsing
         self.tool = ''  # Signify which parser to run
+        self.errorList = []
 
     def setProg(self, p):  # Set program to run
         """Class method to set the program name
@@ -228,7 +229,7 @@ class ValWrap():
         kind = ""
         what = ""
         line = ""
-	file = ""
+        file = ""
         for tag in root.findall('error'):
             kind = tag.find('kind').text
             if tag.find('what') is not None:
@@ -240,10 +241,16 @@ class ValWrap():
                 if frame.find('line') is not None:
                     line = frame.find('line').text
                     file = frame.find('file').text
-		    break
+            break
             errlist.append(ValgError(kind, what, line, file))
+            self.errorList.append(ValgError(kind, what, line, file))
+            print(kind + " " + what + " " + line + " " + file)
         for err in errlist:
             print (err.kind + ' ' + err.what + ' at ' + err.line + ' in ' + err.file + "\n" )
+
+    def getErrList(self):
+        return self.errorList
+
 
 def main():
     vl = ValWrap()
@@ -254,10 +261,13 @@ def main():
     vl.runAnlys('mem')
     print('\nResults\n')
     print(vl.getMemResults())
+    vl.parseOutput()
+  #  print(vl.getMemResults())
     print('Memcheck- tool opt - Leak-Check=Full')
     vl.runAnlys('mem', {'lk_ch': 'full'})
     print('\nResults\n')
-    print(vl.getMemResults())
+    vl.parseOutput()
+  #  print(vl.getMemResults())
     print('Memcheck- tool opt - Leak-Check=Full with error flag True')
     vl.runAnlys('mem', {'lk_ch': 'full'}, True)
     print('\nResults\n')
