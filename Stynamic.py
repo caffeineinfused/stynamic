@@ -1,11 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import argparse
 import FlawFndr
 import sys
 from collections import defaultdict
 import os, fnmatch
 from ValgWrapper import ValWrap
-
+from itertools import zip_longest
 
 class Stynamic():
     flags = []
@@ -148,8 +148,8 @@ class Stynamic():
 
     def prtyPrntOutBth(self):
         flawOut = {}
-        valD = {}
-        valOut = defaultdict(list)
+        valD = defaultdict(list)
+        valOut = {}
         for flwIn in self.flaw_instn:
             flawOut[flwIn.getFileName()] = flwIn.getParsedErrors()
 
@@ -157,11 +157,14 @@ class Stynamic():
         for valIn in self.vl.errorList:
             print('VAL OUTPUT!')
             print(valIn)
-            k, w, l, f = valIn
+            k = valIn.kind
+            f = valIn.file
+            w = valIn.what
+            l = valIn.line
             print(f)
             print(l + " " + w + " " + k)
-            valD[l] = k + " : " + w
-            valOut[f].append(valD)
+            valD[l].append(k + " : " + w)
+            valOut[f] = valD
 
         for fl, err in flawOut.items():
             print(fl + ' ')
@@ -170,6 +173,17 @@ class Stynamic():
         for fl, err in valOut.items():
             print(fl+ ' ')
             print(err)
+
+        for vk, fk in zip_longest(flawOut.keys(), valOut.keys(), fillvalue=''):
+            vO = {}
+            fO = {}
+            if vk != '':
+                vO = valOut[vk]
+            if fk != '':
+                fO = flawOut[fk]
+
+            for x, y in sorted(zip_longest(fO, vO, fillvalue='-')):
+                print(x + '\t' + y)
 
 
 def main():
