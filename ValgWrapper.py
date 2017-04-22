@@ -241,15 +241,16 @@ class ValWrap():
                 if frame.find('line') is not None:
                     line = frame.find('line').text
                     file = frame.find('file').text
-            break
             errlist.append(ValgError(kind, what, line, file))
             self.errorList.append(ValgError(kind, what, line, file))
             print(kind + " " + what + " " + line + " " + file)
         for err in errlist:
             print (err.kind + ' ' + err.what + ' at ' + err.line + ' in ' + err.file + "\n" )
 
+
     def getErrList(self):
         return self.errorList
+
 
 
 def main():
