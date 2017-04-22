@@ -28,7 +28,7 @@ class Stynamic():
     def parseOpts(self):
         parser = argparse.ArgumentParser(
             prog="Stynamic",
-            description="Code vulnerability detection program that gets output from Static (from Flawfinder) and Dynamic (from Valgrind) code analysis of C++ code. Requires path to makefile or executeable code compiled with gcc using the -g flag for complete results.")
+            description="Code vulnerability detection program that gets output from Static (from Flawfinder) and Dynamic (from Valgrind) code analysis of C++ code. Requires executeable code compiled with gcc using the -g flag for complete results.")
         group0 = parser.add_mutually_exclusive_group()
         group0.add_argument(
             '-q', action='store_true',
@@ -42,9 +42,6 @@ class Stynamic():
 
         group1 = parser.add_argument_group()
         group1.add_argument(
-            '-m', metavar='makefile', action='store',
-            help='Specify makefile location to augment for running with Stynamic')
-        group1.add_argument(
             '-b', metavar='binary', action='store',
             help='Specify binary location for running with Stynamic')
 
@@ -53,8 +50,6 @@ class Stynamic():
             '-ba', metavar='binary arguments', action='store', required=False,
             help='If binary requires arguments specify here')
 
-        group2 = parser.add_mutually_exclusive_group()
-
         group2 = parser.add_argument_group()
 
         group2.add_argument(
@@ -62,13 +57,15 @@ class Stynamic():
             required=False,
             action='append',
             nargs='+',
-            help='Have Stynamic automatically determine source file list from the provided pattern')
+            metavar='pattern',
+            help='Have Stynamic automatically determine source file list from the provided pattern(s)')
         group2.add_argument(
             '-f',
             nargs='+',
             action='append',
             required=False,
-            help='Specify files for Stynamic to check')
+            metavar='file',
+            help='Specify file(s) for Stynamic to check')
         self.flags = vars(parser.parse_known_args(sys.argv[1:])[0])
         self.valg_flags = parser.parse_known_args(sys.argv[1:])[1]
         if len(self.valg_flags) < 1:
