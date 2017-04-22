@@ -153,6 +153,7 @@ class Stynamic():
         valOut = {}
         for flwIn in self.flaw_instn:
             flawOut[flwIn.getFileName()] = flwIn.getParsedErrors()
+            print(flwIn.getFileName())
 
         print(self.vl.errorList)
         for valIn in self.vl.errorList:

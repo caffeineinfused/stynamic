@@ -13,9 +13,9 @@ class FlawFinder():
         args -- the arguments (files) to give to run flawfinder
         outPut -- the output from running flawfinder
     """
-    cFileFinder = re.compile(r"\w+.c")
-    cHdrFinder = re.compile(r"\w+.h")
-    cppFinder = re.compile(r"\w+.cpp")
+    cFileFinder = re.compile(r"\w+\.c")
+    cHdrFinder = re.compile(r"\w+\.h")
+    cppFinder = re.compile(r"\w+\.cpp")
 
     def __init__(self):
         self.args = 'flawfinder '
