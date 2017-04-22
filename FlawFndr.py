@@ -92,12 +92,7 @@ class FlawFinder():
                 self.errOuts[
                     beg.group(2)] = self.outPut[
                     beg.end()+1:endEr.start()-1]
-                beg = self.errFnd.search(self.outPut, endEr.end()+1)
-                if not beg:
-                    self.errOuts[
-                        endEr.group(2)] = self.outPut[
-                        endEr.end()+1:anlys.start()-1]
-                    break
+                beg = endEr
             else:
                 self.errOuts[
                     beg.group(2)] = self.outPut[
