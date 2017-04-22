@@ -77,11 +77,12 @@ class ValgError:
     kind = ""
     what = ""
     line = ""
-    
-    def __init__(self, kind, what, line):
+    file = ""
+    def __init__(self, kind, what, line, file):
         self.kind = kind
         self.what = what
         self.line = line
+	self.file = file
 
 class ValWrap():
     """Class ValWrap that calls valgrind and parses output
@@ -227,6 +228,7 @@ class ValWrap():
         kind = ""
         what = ""
         line = ""
+	file = ""
         for tag in root.findall('error'):
             kind = tag.find('kind').text
             if tag.find('what') is not None:
@@ -237,10 +239,11 @@ class ValWrap():
             for frame in sta.findall('frame'):
                 if frame.find('line') is not None:
                     line = frame.find('line').text
-                    break
-            errlist.append(ValgError(kind, what, line))
+                    file = frame.find('file').text
+		    break
+            errlist.append(ValgError(kind, what, line, file))
         for err in errlist:
-            print (err.kind + ' ' + err.what + ' at ' + err.line + "\n")
+            print (err.kind + ' ' + err.what + ' at ' + err.line + ' in ' + err.file + "\n" )
 
 def main():
     vl = ValWrap()
