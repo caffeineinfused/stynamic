@@ -177,9 +177,9 @@ class Stynamic():
         for vk, fk in zip_longest(flawOut.keys(), valOut.keys(), fillvalue=''):
             vO = {}
             fO = {}
-            if vk != '':
+            if vk in valOut:
                 vO = valOut[vk]
-            if fk != '':
+            if fk in flawOut:
                 fO = flawOut[fk]
 
             for x, y in sorted(zip_longest(fO, vO, fillvalue='-')):
