@@ -3,6 +3,7 @@ import argparse
 import FlawFndr
 import sys
 from collections import defaultdict
+import os, fnmatch
 from ValgWrapper import ValWrap
 
 
@@ -13,6 +14,16 @@ class Stynamic():
     noFiles = False
     vl = ValWrap()
     fw = FlawFndr.FlawFinder()
+    #start borrowed method
+    def find(self, pattern, path): #entire method taken from StackOverflow: https://stackoverflow.com/questions/1724693/find-a-file-in-python
+        result = []
+        for root, dirs, files in os.walk(path):
+            for name in files:
+                if fnmatch.fnmatch(name, pattern):
+                    result.append(os.path.join(root, name))
+        return result
+    #end borrowed method
+
 
     def parseOpts(self):
         parser = argparse.ArgumentParser(
@@ -37,14 +48,21 @@ class Stynamic():
             '-b', metavar='binary', action='store',
             help='Specify binary location for running with Stynamic')
 
+
         group1.add_argument(
             '-ba', metavar='binary arguments', action='store', required=False,
             help='If binary requires arguments specify here')
 
         group2 = parser.add_mutually_exclusive_group()
+
+        group2 = parser.add_argument_group()
+
         group2.add_argument(
-            '-a', action='store_true', required=False,
-            help='Have Stynamic automatically determine source file list')
+            '-a',
+            required=False,
+            action='append',
+            nargs='+',
+            help='Have Stynamic automatically determine source file list from the provided pattern')
         group2.add_argument(
             '-f',
             nargs='+',
@@ -59,8 +77,10 @@ class Stynamic():
         print(self.valg_flags)
 
     def instValgWrapper(self):
+
 #        if self.noFiles:
 #            print('No files give, please rerun stynamic with a list of files.')
+
         print(self.flags['b'])
         self.vl.setProg(self.flags['b'])
         self.vl.setArgs(self.flags['ba'])
@@ -81,9 +101,32 @@ class Stynamic():
         #print(self.vl.getMemResults())
         self.vl.parseOutput()
 
-    def instFlawfWrapper(self):
+    def flawFileList(self):
+        list = []
+        try:
+            for filelist in self.flags['f']:
+                for file in filelist:
+                    list.append(file)
+                    #print "file:" + file + "\n"
+        except TypeError:
+            print('')
+
+        try:
+            for regexlist in self.flags['a']:
+                #print "regexlist:" + str(regexlist) + "\n"
+                for regex in regexlist:
+                    #print "regex:" + regex + "\n"
+                    for file in self.find(regex, os.getcwd()):
+                        list.append(file)
+                        #print "file2:" + file + "\n"
+        except TypeError:
+            print('')
+        #print list
+        return list
+
+    def instFlawfWrapper(self, file):
         ffflags = '-c '
-        ffargs = ''
+        ffargs = file
 
         if (self.flags['v']):  # verbose level of output
             ffflags += '-n -m 0 --followdotdir '
@@ -91,14 +134,6 @@ class Stynamic():
             ffflags += '-F -m 4 '
         else:  # default level of output - medium
             ffflags += '-m 1 '
-        try:
-            if (not self.flags['d']):
-                ffargs += self.flags['f'][0][0]
-            else:
-                ffargs += './testFiles/ValTest.c'  # try to detect files in current directory
-        except TypeError:
-            sys.exit(
-                'No files given to parse, please read the help menu and try again.')
         self.fw.setFlags(ffflags)
         self.fw.setArgs(ffargs)
         self.fw.runAnalysis()
@@ -142,8 +177,13 @@ def main():
     Styn.parseOpts()
     Styn.instValgWrapper()
     Styn.RunValg()
-    Styn.instFlawfWrapper()
-    Styn.prtyPrntOutBth()
+
+
+    list = Styn.flawFileList()
+    for file in list:
+        Styn.fw = FlawFndr.FlawFinder()
+        Styn.instFlawfWrapper(file)
+        Styn.prtyPrntOutBth()
 
 if __name__ == '__main__':
     main()

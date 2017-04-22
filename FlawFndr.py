@@ -66,10 +66,10 @@ class FlawFinder():
 
     def runAnalysis(self):
         anlys = subprocess.Popen(self.args, stdout=subprocess.PIPE)
-        anlys.wait()
-        tempOut = anlys.stdout.read()
-        self.outPut = tempOut.decode('utf-8')
+        comm_tuple = anlys.communicate()
+        self.outPut = comm_tuple[0].decode('utf-8')
         self.outPut = self.outPut.replace('\n', ' ')
+        print("Analysis completed!")
 
     def getOutPut(self):
         """Returns the output from running the analysis against a list of
@@ -137,7 +137,7 @@ class FlawFinder():
 
 def main():
     ff = FlawFinder()
-    ff.setArgs('./testFiles/ValTest.c')
+    ff.setArgs('/home/anthony/cyberproj/stynamic/dependencies/valgrind-3.12.0/memcheck/tests/str_tester.c')
     ff.runAnalysis()
     print('Before Parsing\n')
     print(ff.getOutPut())
