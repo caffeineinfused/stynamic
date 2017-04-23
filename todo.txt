@@ -13,6 +13,8 @@ To-Do
 			make sure all the arguments are used or remove them if not
 			make sure different verbosities work
 			make sure useful error messages are displayed when bad arg options are provided
+			comment out any "debug" code that we used to help us trace issues
+			finalize code commenting
 		test
 			run unit tests on different source to verify parsing always works
 		side by side line attribution
