@@ -60,3 +60,14 @@ optional arguments:
                         from the provided pattern(s)
   -f file [file ...]    Specify file(s) for Stynamic to check
 
+
+Reference to Previous Work:
+We use the existing open source tools of Flawfinder [1] and Valgrind [2] as our Static and Dynamic C++ Code Vulnerability Detection tools respectively by creating wrappers for each program, FlawFndr.py and ValgWrapper.py. The insight into the need for a combination of tool types and the state of current code vulnerability detection is from the following resources [3] - [7].
+
+1. Wheeler, David. Work in Progress, “Flawfinder” https://www.dwheeler.com/flawfinder/, Accessed April 22, 2017
+2. Valgrind Developers, Work in Progress “Valgrind” http://valgrind.org/, 2000, Accessed April 22, 2017
+3. Yamaguchi, Fabian, Christian Wressnegger, Hugo Gascon, and Konrad Rieck. "Chucky: Exposing missing checks in source code for vulnerability discovery." In Proceedings of the 2013 ACM SIGSAC conference on Computer & communications security, ACM, pg. 499-510. 2013.
+4. Assal, Hala, Sonia Chiasson, and Robert Biddle. "Cesar: Visual representation of source code vulnerabilities." In Visualization for Cyber Security (VizSec), 2016 IEEE Symposium on, IEEE, pp. 1-8, 2016.
+5. Wikipedia. work in progress “Memory Debugging.” https://en.wikipedia.org/wiki/Memory_debugger Accessed on March 28, 2017.
+6. Rains, Tim. Work in progress. “Microsoft’s Free Security Tools - banned.h” https://blogs.microsoft.com/microsoftsecure/2012/08/30/microsofts-free-security-tools-banned-h/ . 2012. Accessed on March 29, 2017.
+7. Sutton, Michael, Adam Greene, and Pedram Amini. Fuzzing: brute force vulnerability discovery. Pearson Education, 2007.
