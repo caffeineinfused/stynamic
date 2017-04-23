@@ -42,12 +42,12 @@ class Stynamic():
 
         group1 = parser.add_argument_group()
         group1.add_argument(
-            '-b', metavar='binary', action='store', nargs='?',
+            '-b', metavar='binary', action='append',
             help='Specify binary location for running with Stynamic')
 
 
         group1.add_argument(
-            '-ba', metavar='binary arguments', action='store', required=False, nargs='?',
+            '-ba', metavar='binary arguments', action='append', required=False,
             help='If binary requires arguments specify here')
 
         group2 = parser.add_argument_group()
@@ -56,12 +56,12 @@ class Stynamic():
             '-a',
             required=False,
             action='append',
-            nargs='+',
+            nargs='*',
             metavar='pattern',
             help='Have Stynamic automatically determine source file list from the provided pattern(s)')
         group2.add_argument(
             '-f',
-            nargs='+',
+            nargs='*',
             action='append',
             required=False,
             metavar='file',
@@ -72,10 +72,10 @@ class Stynamic():
 
     def instValgWrapper(self):
 
-        print(self.flags['b'])
-        self.vl.setProg(self.flags['b'])
+        print(self.flags['b'][0])
+        self.vl.setProg(self.flags['b'][0])
         if(self.flags['ba'] != None):
-            self.vl.setArgs(self.flags['ba'])
+            self.vl.setArgs(self.flags['ba'][0])
 
     def RunValg(self):
         #print('\nRunning analysis\n')
@@ -183,14 +183,23 @@ class Stynamic():
 def main():
     Styn = Stynamic()
     parser = Styn.parseOpts()
+    skip=False
     if(Styn.flags['b'] == None and not(Styn.flags['a'] != None or Styn.flags['f'] != None)):
         parser.print_help()
 
-    if(Styn.flags['b'] != None):
+    if(Styn.flags['ba'] != None and len(Styn.flags['ba']) > 1):
+        print("Only one set of binary arguments may be specified\n")
+        parser.print_help()
+        skip = True
+
+    if(Styn.flags['b'] != None and len(Styn.flags['b']) == 1 and not skip):
         Styn.instValgWrapper()
         Styn.RunValg()
+    elif(Styn.flags['b'] != None and len(Styn.flags['b']) > 1):
+        print("Only one binary may be specified\n")
+        parser.print_help()
 
-    if(Styn.flags['a'] != None or Styn.flags['f'] != None):
+    if(Styn.flags['a'] != None or Styn.flags['f'] != None and not skip):
         list = Styn.flawFileList()
         for file in list:
             Styn.fw = FlawFndr.FlawFinder()
