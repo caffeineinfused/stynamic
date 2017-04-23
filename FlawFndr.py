@@ -139,7 +139,8 @@ class FlawFinder():
 
 def main():
     ff = FlawFinder()
-    ff.setArgs('/home/anthony/cyberproj/stynamic/dependencies/valgrind-3.12.0/memcheck/tests/str_tester.c')
+    #ff.setArgs('/home/anthony/cyberproj/stynamic/dependencies/valgrind-3.12.0/memcheck/tests/str_tester.c')
+    ff.setArgs('./testFiles/client.c')
     ff.runAnalysis()
     print('Before Parsing\n')
     print(ff.getOutPut())
