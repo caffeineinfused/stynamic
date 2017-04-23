@@ -5,22 +5,58 @@ About:
 Stynamic detects potential code vulnerabilities in C++ code and provides references to the potentially vulnerable code through Static (using the Flawfinder tool) and Dynamic analysis (using the Valgrind tool). As most tools utilize only Static or Dynamic analysis, Stynamic allows for a very simple interface that provides a more complete picture of the potentially vulnerable code. Output can be specified as Quiet, -q flag, (minimum amount of output, avoids many potential false-positives), Default, -d flag (medium amount of output), or Verbose, -v flag (maximum amount of output).
 
 
-Usage:
-
+Setup:
 There are two options that can be made to run stynamic.
 
-If internet connection is available run follow option 1, otherwise follow directions for option 2.
+If internet connection is available, follow directions for option 1, otherwise follow directions for option 2.
 
 Option 1:
-Before running program in a Kali environment, run on the command line:
+Before running program in a Kali environment, run the following on the command line:
    $ sudo apt-get install flawfinder
    $ sudo apt-get install valgrind
 
 Option 2:
-Before running stynamic, to install that required packages, run the following commands from inside the stynamic package:
+Before running stynamic, to install the required packages, run the following commands from inside the stynamic package:
    $ sudo ./SetUp
 
 
+Usage:
+***Program to be tested must be compiled with gcc using the -g flag***
 
-Program must be compiled with gcc using the -g flag
+We have included the ./testFiles directory that includes ValTest.c that was previously compiled with gcc using the -g flag to the binary ValTester to give an example of tool usage and output.
+
+Sample usage could be:
+   $ ./Stynamic.py -v -f ./testFiles/ValTest.c -b ./testFiles/ValTester (this will run Stynamic with verbose output on ValTest.c)
+
+   $ ./Stynamic.py -q -f ./testFiles/ValTest.c (this will run Stynamic with only static analysis since no binary was included, with quiet output on ValTest.c)
+
+   $ ./Stynamic.py -d -a *.c (This will run Stynamic on all .c files, recursively, with default output)
+
+   $ ./Stynamic.py --help (This will print the help opetions, listed below)
+
+
+Help:
+usage: Stynamic [-h] [-q | -d | -v] [-b binary] [-ba binary arguments]
+                [-a pattern [pattern ...]] [-f file [file ...]]
+
+Code vulnerability detection program that gets output from Static (from
+Flawfinder) and Dynamic (from Valgrind) code analysis of C++ code. Requires
+executeable code compiled with gcc using the -g flag for complete results.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -q                    Quiet level of output (Minimum) - exclusive from other
+                        output levels
+  -d                    Default level of output (Medium) - exclusive from
+                        other output levels
+  -v                    Verbose level of output (Maximum) - exclusive from
+                        other other levels
+
+  -b binary             Specify binary location for running with Stynamic
+  -ba binary arguments  If binary requires arguments specify here
+
+  -a pattern [pattern ...]
+                        Have Stynamic automatically determine source file list
+                        from the provided pattern(s)
+  -f file [file ...]    Specify file(s) for Stynamic to check
 
