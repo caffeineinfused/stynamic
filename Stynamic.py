@@ -149,7 +149,6 @@ class Stynamic():
 
         print(self.vl.errorList)
         for valIn in self.vl.errorList:
-            print('VAL OUTPUT!')
             k = valIn.kind
             f = valIn.file
             w = valIn.what
@@ -157,17 +156,8 @@ class Stynamic():
             valD[l].append(k + " : " + w)
             valOut[f] = valD
 
-        for fl, err in flawOut.items():
-            if(not isinstance(fl, str)):
-                print(fl.group(0) + ' ')
-            print(err)
-
-        for fl, err in valOut.items():
-            print(fl+ ' ')
-            print(err)
 
         for fk, vk in zip_longest(flawOut.keys(), valOut.keys(), fillvalue=''):
-
             vO = {}
             fO = {}
             if vk in valOut:
@@ -176,16 +166,16 @@ class Stynamic():
                 fO = flawOut[fk]
 
             if not vO:
-                print('file name: '+fk);
+                print('\n\nfile name: '+fk+'\n');
                 for line, error in sorted(fO.items()):
                     outP = 'Line: '+line+'\nError: '+error
-                    print(textwrap.fill(outP, width=40))
+                    print(textwrap.fill(outP, width=40, replace_whitespace=False))
                     print('\n')
                 continue
 
             if not fO:
                 for line, error in sorted(vO.items()):
-                    print('Line:'+ line + '\tError:'+error)
+                    print('Line:'+ line + '\nError:'+error)
                 continue
 
             for x, y in sorted(zip_longest(fO, vO, fillvalue='-')):
@@ -195,15 +185,15 @@ class Stynamic():
                     for ln in vO[y]:
                         valStrng += ln + '\n'
                     fL = 'Line: '+x+'\n'+ 'Error: '+fO[x] + '\n'
-                    fL = textwrap.wrap(fL, width=40)
-                    vL = textwrap.wrap(valStrng, width=40)
+                    fL = textwrap.wrap(fL, width=40, replace_whitespace=False)
+                    vL = textwrap.wrap(valStrng, width=40, replace_whitespace=False)
                     for f, v in zip_longest(fL, vL, fillvalue=''):
                         print('{0:<45} \t {1:>45}'.format(f, v))
                     continue
 
                 if x in fO:
                     fL = 'Line: '+x+'\n'+'Error: '+fO[x] + '\n'
-                    fL = textwrap.fill(fL, width=40)
+                    fL = textwrap.fill(fL, width=40, replace_whitespace=False)
                     print('{0:^45}'.format(fL))
                     continue
 
