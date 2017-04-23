@@ -8,9 +8,9 @@ import os, fnmatch
 from ValgWrapper import ValWrap
 from itertools import zip_longest
 
+
 class Stynamic():
     flags = []
-    valg_flags = []
     flaw_instn = []
     noFiles = False
     vl = ValWrap()
@@ -29,7 +29,7 @@ class Stynamic():
     def parseOpts(self):
         parser = argparse.ArgumentParser(
             prog="Stynamic",
-            description="Code vulnerability detection program that gets output from Static (from Flawfinder) and Dynamic (from Valgrind) code analysis of C++ code. Requires path to makefile or executeable code compiled with gcc using the -g flag for complete results.")
+            description="Code vulnerability detection program that gets output from Static (from Flawfinder) and Dynamic (from Valgrind) code analysis of C++ code. Requires executeable code compiled with gcc using the -g flag for complete results.")
         group0 = parser.add_mutually_exclusive_group()
         group0.add_argument(
             '-q', action='store_true',
@@ -43,18 +43,13 @@ class Stynamic():
 
         group1 = parser.add_argument_group()
         group1.add_argument(
-            '-m', metavar='makefile', action='store',
-            help='Specify makefile location to augment for running with Stynamic')
-        group1.add_argument(
-            '-b', metavar='binary', action='store',
+            '-b', metavar='binary', action='append',
             help='Specify binary location for running with Stynamic')
 
 
         group1.add_argument(
-            '-ba', metavar='binary arguments', action='store', required=False,
+            '-ba', metavar='binary arguments', action='append', required=False,
             help='If binary requires arguments specify here')
-
-        group2 = parser.add_mutually_exclusive_group()
 
         group2 = parser.add_argument_group()
 
@@ -62,30 +57,26 @@ class Stynamic():
             '-a',
             required=False,
             action='append',
-            nargs='+',
-            help='Have Stynamic automatically determine source file list from the provided pattern')
+            nargs='*',
+            metavar='pattern',
+            help='Have Stynamic automatically determine source file list from the provided pattern(s)')
         group2.add_argument(
             '-f',
-            nargs='+',
+            nargs='*',
             action='append',
             required=False,
-            help='Specify files for Stynamic to check')
-        self.flags = vars(parser.parse_known_args(sys.argv[1:])[0])
-        self.valg_flags = parser.parse_known_args(sys.argv[1:])[1]
-        if len(self.valg_flags) < 1:
-            self.noFiles = True
+            metavar='file',
+            help='Specify file(s) for Stynamic to check')
+        self.flags = vars(parser.parse_args(sys.argv[1:]))
         print(self.flags)
-        print(self.valg_flags)
+        return parser
 
     def instValgWrapper(self):
 
-#        if self.noFiles:
-#            print('No files give, please rerun stynamic with a list of files.')
-
-        print(self.flags['b'])
-        self.vl.setProg(self.flags['b'])
+        print(self.flags['b'][0])
+        self.vl.setProg(self.flags['b'][0])
         if(self.flags['ba'] != None):
-            self.vl.setArgs(self.flags['ba'])
+            self.vl.setArgs(self.flags['ba'][0])
 
     def RunValg(self):
         #print('\nRunning analysis\n')
@@ -166,7 +157,17 @@ class Stynamic():
             valD[l].append(k + " : " + w)
             valOut[f] = valD
 
+        for fl, err in flawOut.items():
+            if(not isinstance(fl, str)):
+                print(fl.group(0) + ' ')
+            print(err)
+
+        for fl, err in valOut.items():
+            print(fl+ ' ')
+            print(err)
+
         for fk, vk in zip_longest(flawOut.keys(), valOut.keys(), fillvalue=''):
+
             vO = {}
             fO = {}
             if vk in valOut:
@@ -213,16 +214,29 @@ class Stynamic():
 
 def main():
     Styn = Stynamic()
-    Styn.parseOpts()
-    Styn.instValgWrapper()
-    Styn.RunValg()
+    parser = Styn.parseOpts()
+    skip=False
+    if(Styn.flags['b'] == None and not(Styn.flags['a'] != None or Styn.flags['f'] != None)):
+        parser.print_help()
 
+    if(Styn.flags['ba'] != None and len(Styn.flags['ba']) > 1):
+        print("Only one set of binary arguments may be specified\n")
+        parser.print_help()
+        skip = True
 
-    list = Styn.flawFileList()
-    for file in list:
-        Styn.fw = FlawFndr.FlawFinder()
-        Styn.instFlawfWrapper(file)
-    Styn.prtyPrntOutBth()
+    if(Styn.flags['b'] != None and len(Styn.flags['b']) == 1 and not skip):
+        Styn.instValgWrapper()
+        Styn.RunValg()
+    elif(Styn.flags['b'] != None and len(Styn.flags['b']) > 1):
+        print("Only one binary may be specified\n")
+        parser.print_help()
+
+    if(Styn.flags['a'] != None or Styn.flags['f'] != None and not skip):
+        list = Styn.flawFileList()
+        for file in list:
+            Styn.fw = FlawFndr.FlawFinder()
+            Styn.instFlawfWrapper(file)
+        Styn.prtyPrntOutBth()
 
 if __name__ == '__main__':
     main()
