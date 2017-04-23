@@ -7,9 +7,9 @@ import os, fnmatch
 from ValgWrapper import ValWrap
 from itertools import zip_longest
 
+
 class Stynamic():
     flags = []
-    valg_flags = []
     flaw_instn = []
     noFiles = False
     vl = ValWrap()
@@ -42,12 +42,12 @@ class Stynamic():
 
         group1 = parser.add_argument_group()
         group1.add_argument(
-            '-b', metavar='binary', action='store',
+            '-b', metavar='binary', action='store', nargs='?',
             help='Specify binary location for running with Stynamic')
 
 
         group1.add_argument(
-            '-ba', metavar='binary arguments', action='store', required=False,
+            '-ba', metavar='binary arguments', action='store', required=False, nargs='?',
             help='If binary requires arguments specify here')
 
         group2 = parser.add_argument_group()
@@ -66,18 +66,11 @@ class Stynamic():
             required=False,
             metavar='file',
             help='Specify file(s) for Stynamic to check')
-        self.flags = vars(parser.parse_known_args(sys.argv[1:])[0])
-        self.valg_flags = parser.parse_known_args(sys.argv[1:])[1]
-        if len(self.valg_flags) < 1:
-            self.noFiles = True
+        self.flags = vars(parser.parse_args(sys.argv[1:]))
         print(self.flags)
-        print(self.valg_flags)
         return parser
 
     def instValgWrapper(self):
-
-#        if self.noFiles:
-#            print('No files give, please rerun stynamic with a list of files.')
 
         print(self.flags['b'])
         self.vl.setProg(self.flags['b'])
@@ -167,7 +160,8 @@ class Stynamic():
             valOut[f] = valD
 
         for fl, err in flawOut.items():
-            print(fl.group(0) + ' ')
+            if(not isinstance(fl, str)):
+                print(fl.group(0) + ' ')
             print(err)
 
         for fl, err in valOut.items():

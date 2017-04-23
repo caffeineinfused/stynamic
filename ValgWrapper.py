@@ -224,29 +224,31 @@ class ValWrap():
         return self.memOut
 
     def parseOutput(self):
-        root = ET.fromstring(self.memOut)
-        errlist = []
-        kind = ""
-        what = ""
-        line = ""
-        file = ""
-        for tag in root.findall('error'):
-            kind = tag.find('kind').text
-            if tag.find('what') is not None:
-                    what = tag.find('what').text
-            elif tag.find('xwhat') is not None:
-                    what = tag.find('xwhat').find('text').text
-            sta = tag.find('stack')
-            for frame in sta.findall('frame'):
-                if frame.find('line') is not None:
-                    line = frame.find('line').text
-                    file = frame.find('file').text
-            errlist.append(ValgError(kind, what, line, file))
-            self.errorList.append(ValgError(kind, what, line, file))
-            print(kind + " " + what + " " + line + " " + file)
-        for err in errlist:
-            print (err.kind + ' ' + err.what + ' at ' + err.line + ' in ' + err.file + "\n" )
-
+        try:
+            root = ET.fromstring(self.memOut)
+            errlist = []
+            kind = ""
+            what = ""
+            line = ""
+            file = ""
+            for tag in root.findall('error'):
+                kind = tag.find('kind').text
+                if tag.find('what') is not None:
+                        what = tag.find('what').text
+                elif tag.find('xwhat') is not None:
+                        what = tag.find('xwhat').find('text').text
+                sta = tag.find('stack')
+                for frame in sta.findall('frame'):
+                    if frame.find('line') is not None:
+                        line = frame.find('line').text
+                        file = frame.find('file').text
+                errlist.append(ValgError(kind, what, line, file))
+                self.errorList.append(ValgError(kind, what, line, file))
+                print(kind + " " + what + " " + line + " " + file)
+            for err in errlist:
+                print (err.kind + ' ' + err.what + ' at ' + err.line + ' in ' + err.file + "\n" )
+        except ET.ParseError:
+            print("Error getting output from Valgrind; did you specify a (1) binary (2) compiled with the -g flag?")
 
     def getErrList(self):
         return self.errorList
