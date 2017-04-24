@@ -140,12 +140,14 @@ class Stynamic():
         self.flaw_instn.append(self.fw)
 
     def prtyPrntOutBth(self):
+        fileSet = set()
         flawOut = {}
         valD = defaultdict(list)
         valOut = {}
         for flwIn in self.flaw_instn:
             fName = flwIn.getFileName()
             flawOut[fName.group(0)] = flwIn.getParsedErrors()
+            fileSet.add(fName.group(0))
 
         print(self.vl.errorList)
         for valIn in self.vl.errorList:
@@ -155,52 +157,90 @@ class Stynamic():
             l = valIn.line
             valD[l].append(k + " : " + w)
             valOut[f] = valD
+            fileSet.add(f)
 
-
-        for fk, vk in zip_longest(flawOut.keys(), valOut.keys(), fillvalue=''):
+        sttc = "Static Analysis"
+        dyn = "Dynamic Analysis"
+        #for fk, vk in zip_longest(flawOut.keys(), valOut.keys(), fillvalue=''):
+        #print("*"*97)
+        #print("| {0:^45} | {1:^45} |".format(sttc.center(40), dyn.center(40)))
+        res = "Results!"
+        print("*"*97)
+        print("| {0:93} |".format(res.center(93)))
+        for fl in fileSet:
+            print("*"*97)
             vO = {}
             fO = {}
-            if vk in valOut:
-                vO = valOut[vk]
-            if fk in flawOut:
-                fO = flawOut[fk]
+            if fl in valOut:
+                vO = valOut[fl]
+            if fl in flawOut:
+                fO = flawOut[fl]
 
             if not vO:
-                print('\n\nfile name: '+fk+'\n');
+                print("-"*97)
+                print('\nFile name: '+fl);
+                print("-"*97)
+                print("| {0:^45} | {1:^45} |".format(sttc.center(40), dyn.center(40)))
+                print("*"*97)
                 for line, error in sorted(fO.items()):
-                    outP = 'Line: '+line+'\nError: '+error
-                    print(textwrap.fill(outP, width=40, replace_whitespace=False))
-                    print('\n')
+                    outP = 'Line: '+line+'\t\tError: '+error
+                    output = textwrap.wrap(outP, width=40, replace_whitespace=False)
+                    blnk = " "
+                    for out in output:
+                        print("| {0:<45} | {1:>45} |".format(out.center(40), blnk))
+                    print("|"+" "*47+"|"+" "*47+"|")
                 continue
 
             if not fO:
+                print("-"*97)
+                print('\nFile name: '+fl);
+                print("-"*97)
+                print("| {0:^45} | {1:^45} |".format(sttc.center(40), dyn.center(40)))
+                print("*"*97)
                 for line, error in sorted(vO.items()):
-                    print('Line:'+ line + '\nError:'+error)
+                    outP = "Line: "+line+"\t\tError: "+error
+                    output = textwrap.wrap(outP, width=40, replace_whitespace=False)
+                    blnk = " "
+                    for out in output:
+                        print("| {0:<45} | {1:>45} |".format(out.center(40), blnk))
+                    print("|"+" "*47+"|"+" "*47+"|")
                 continue
 
-            for x, y in sorted(zip_longest(fO, vO, fillvalue='-')):
-                print(y)
+            print("-"*97)
+            print("\nFile Name: "+fl)
+            print("-"*97)
+            print("| {0:^45} | {1:^45} |".format(sttc.center(40), dyn.center(40)))
+            print("*"*97)
+            for x, y in sorted(zip_longest(fO.keys(), vO.keys(), fillvalue='-')):
                 if x in fO and y in vO:
-                    valStrng = 'Line: '+ y+'\n'+ 'Error: '
+                    valStrng = 'Line: '+ y+'\t\tError: '
                     for ln in vO[y]:
                         valStrng += ln + '\n'
-                    fL = 'Line: '+x+'\n'+ 'Error: '+fO[x] + '\n'
+                    fL = 'Line: '+x+'\t\tError: '+fO[x] + '\n'
                     fL = textwrap.wrap(fL, width=40, replace_whitespace=False)
                     vL = textwrap.wrap(valStrng, width=40, replace_whitespace=False)
-                    for f, v in zip_longest(fL, vL, fillvalue=''):
-                        print('{0:<45} \t {1:>45}'.format(f, v))
+                    for f, v in zip_longest(fL, vL, fillvalue=' '):
+                        print('| {0:<45} | {1:>45} |'.format(f.center(40), v.center(40)))
+                    print("|"+" "*47+"|"+" "*47+"|")
                     continue
 
-                if x in fO:
-                    fL = 'Line: '+x+'\n'+'Error: '+fO[x] + '\n'
-                    fL = textwrap.fill(fL, width=40, replace_whitespace=False)
-                    print('{0:^45}'.format(fL))
+                elif x in fO:
+                    fL = 'Line: '+x+'\t\tError: '+fO[x] + '\n'
+                    fL = textwrap.wrap(fL, width=40, replace_whitespace=False)
+                    bnk = " "
+                    for outp in fL:
+                        print('| {0:<45} | {1:>45} |'.format(outp.center(40), bnk.center(40)))
+                    print("|"+" "*47+"|"+" "*47+"|")
                     continue
 
-
-
-
-
+                else:
+                    fL = 'Line: '+x+'\t\tError: '+vO[y] + '\n'
+                    fL = textwrap.wrap(fL, width=40, replace_whitespace=False)
+                    bnk = " "
+                    for outp in fL:
+                        print('| {0:<45} | {1:>45} |'.format(outp.center(40), bnk.center(40)))
+                    print("|"+" "*47+"|"+" "*47+"|")
+                    continue
 
 def main():
     Styn = Stynamic()
