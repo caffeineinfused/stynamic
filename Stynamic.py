@@ -68,12 +68,12 @@ class Stynamic():
             metavar='file',
             help='Specify file(s) for Stynamic to check')
         self.flags = vars(parser.parse_args(sys.argv[1:]))
-        print(self.flags)
+        #print(self.flags)
         return parser
 
     def instValgWrapper(self):
 
-        print(self.flags['b'][0])
+        #print(self.flags['b'][0])
         self.vl.setProg(self.flags['b'][0])
         if(self.flags['ba'] != None):
             self.vl.setArgs(self.flags['ba'][0])

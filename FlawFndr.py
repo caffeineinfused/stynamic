@@ -54,7 +54,7 @@ class FlawFinder():
             mainArg = self.args + Args
         else:
             mainArg = 'flawfinder ' + Args
-        print(mainArg)
+        #print(mainArg)
         self.errFnd = re.compile("("+Args+"):(\d+):")
         cFiles = self.cFileFinder.search(Args)
         hFiles = self.cHdrFinder.search(Args)

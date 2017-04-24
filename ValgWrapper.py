@@ -244,9 +244,9 @@ class ValWrap():
                         file = frame.find('file').text
                 errlist.append(ValgError(kind, what, line, file))
                 self.errorList.append(ValgError(kind, what, line, file))
-                print(kind + " " + what + " " + line + " " + file)
-            for err in errlist:
-                print (err.kind + ' ' + err.what + ' at ' + err.line + ' in ' + err.file + "\n" )
+                #print(kind + " " + what + " " + line + " " + file)
+            #for err in errlist:
+                #print (err.kind + ' ' + err.what + ' at ' + err.line + ' in ' + err.file + "\n" )
         except ET.ParseError:
             print("Error getting output from Valgrind; did you specify a (1) binary (2) compiled with the -g flag?")
 
