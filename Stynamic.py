@@ -215,7 +215,7 @@ class Stynamic():
                 if x in fO and y in vO:
                     valStrng = 'Line: '+ y+'\t\tError: '
                     for ln in vO[y]:
-                        valStrng += ln + '\n'
+                        valStrng += ln + '\t\t\t'
                     fL = 'Line: '+x+'\t\tError: '+fO[x] + '\n'
                     fL = textwrap.wrap(fL, width=40, replace_whitespace=False)
                     vL = textwrap.wrap(valStrng, width=40, replace_whitespace=False)
@@ -234,7 +234,9 @@ class Stynamic():
                     continue
 
                 else:
-                    fL = 'Line: '+x+'\t\tError: '+vO[y] + '\n'
+                    fL = 'Line: '+x+'\t\tError: '
+                    for ln in vO[y]:
+                        fL += ln + '\t\t\t'
                     fL = textwrap.wrap(fL, width=40, replace_whitespace=False)
                     bnk = " "
                     for outp in fL:
