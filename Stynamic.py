@@ -254,11 +254,12 @@ def main():
     run=False
     if(Styn.flags['b'] == None and not(Styn.flags['a'] != None or Styn.flags['f'] != None)):
         parser.print_help()
+        sys.exit()
 
     if(Styn.flags['ba'] != None and len(Styn.flags['ba']) > 1):
         print("Only one set of binary arguments may be specified\n")
         parser.print_help()
-        skip = True
+        sys.exit()
 
     if(Styn.flags['b'] != None and len(Styn.flags['b']) == 1 and not skip):
         Styn.instValgWrapper()
@@ -267,6 +268,7 @@ def main():
     elif(Styn.flags['b'] != None and len(Styn.flags['b']) > 1):
         print("Only one binary may be specified\n")
         parser.print_help()
+        sys.exit()
 
     if(Styn.flags['a'] != None or Styn.flags['f'] != None and not skip):
         list = Styn.flawFileList()
