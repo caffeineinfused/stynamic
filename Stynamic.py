@@ -251,12 +251,13 @@ def main():
     #need to give files to work with - if not help displayed
     if(Styn.flags['b'] == None and not(Styn.flags['a'] != None or Styn.flags['f'] != None)):
         parser.print_help()
+        sys.exit()
 
     #only one set of binary arguments can be applied
     if(Styn.flags['ba'] != None and len(Styn.flags['ba']) > 1):
         print("Only one set of binary arguments may be specified\n")
         parser.print_help()
-        skip = True
+        sys.exit()
 
     #if a binary file is given, the dynamic analysis can be done.
     if(Styn.flags['b'] != None and len(Styn.flags['b']) == 1 and not skip):
@@ -267,6 +268,7 @@ def main():
     elif(Styn.flags['b'] != None and len(Styn.flags['b']) > 1):
         print("Only one binary may be specified\n")
         parser.print_help()
+        sys.exit()
 
     #if source files provided, run the static analysis
     if(Styn.flags['a'] != None or Styn.flags['f'] != None and not skip):
