@@ -155,6 +155,7 @@ class Stynamic():
             f = valIn.file
             w = valIn.what
             l = valIn.line
+            #print ("valerror list entr: " + k + " : " + w)
             valD[l].append(k + " : " + w)
             valOut[f] = valD
             fileSet.add(f)
