@@ -268,7 +268,8 @@ def main():
         for file in list:
             Styn.fw = FlawFndr.FlawFinder()
             Styn.instFlawfWrapper(file)
-        Styn.prtyPrntOutBth()
+    
+    Styn.prtyPrntOutBth()
 
 if __name__ == '__main__':
     main()
