@@ -72,7 +72,7 @@ class FlawFinder():
         comm_tuple = anlys.communicate()
         self.outPut = comm_tuple[0].decode('utf-8')
         self.outPut = self.outPut.replace('\n', ' ')
-        print("Analysis completed!")
+        #print("Analysis completed!")
 
     def getOutPut(self):
         """Returns the output from running the analysis against a list of

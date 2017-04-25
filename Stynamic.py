@@ -133,7 +133,7 @@ class Stynamic():
         # print('\nBefore Parsing\n')
         # print(self.fw.getOutPut())
         self.fw.parseOutput()
-        print('\nAfter Parsing\n')
+        #print('\nAfter Parsing\n')
        # self.fw.printErrors()
        # self.fw.printFnc()
        # self.fw.printFileNames()
@@ -149,7 +149,7 @@ class Stynamic():
             flawOut[fName.group(0)] = flwIn.getParsedErrors()
             fileSet.add(fName.group(0))
 
-        print(self.vl.errorList)
+        #print(self.vl.errorList)
         for valIn in self.vl.errorList:
             k = valIn.kind
             f = valIn.file
