@@ -3,6 +3,7 @@ import re
 import subprocess
 import shlex
 import xml.etree.ElementTree as ET
+#valgrind memory options
 mem_opts = {  # Options in comments
     'lk_ch': '--leak-check=',  # no|summary|yes|fill def-Sum
     'lk_res': '--leak-resolution=',  # low|med|high def-high
@@ -73,6 +74,7 @@ drd_opts = {
     'ig_th': '--ignore-thread-creation=',  # yes|no def - no
 }
 
+#main valgrind wrapper class with variables defined and initiated
 class ValgError:
     kind = ""
     what = ""
@@ -223,6 +225,7 @@ class ValWrap():
         """
         return self.memOut
 
+    #parse output and print error if binary does not work
     def parseOutput(self):
         try:
             root = ET.fromstring(self.memOut)
@@ -254,7 +257,7 @@ class ValWrap():
         return self.errorList
 
 
-
+#main loop if class is not directly initiated for debugging work
 def main():
     vl = ValWrap()
     vl.setProg('./testFiles/ValTester')

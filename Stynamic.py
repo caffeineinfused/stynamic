@@ -8,8 +8,9 @@ import os, fnmatch
 from ValgWrapper import ValWrap
 from itertools import zip_longest
 
-
+#primary class
 class Stynamic():
+    #define variables, flag input array, noFiles check boolean, instantiations of wrappers
     flags = []
     flaw_instn = []
     noFiles = False
@@ -25,11 +26,13 @@ class Stynamic():
         return result
     #end borrowed method
 
-
+    #argparse python library for command line argument parser
     def parseOpts(self):
+        #stynamic description
         parser = argparse.ArgumentParser(
             prog="Stynamic",
             description="Code vulnerability detection program that gets output from Static (from Flawfinder) and Dynamic (from Valgrind) code analysis of C++ code. Requires executeable code compiled with gcc using the -g flag for complete results.")
+        #group of arguments for output is mutually exclusive - prevents multiple options
         group0 = parser.add_mutually_exclusive_group()
         group0.add_argument(
             '-q', action='store_true',
@@ -41,18 +44,19 @@ class Stynamic():
             '-v', action='store_true',
             help='Verbose level of output (Maximum) - exclusive from other other levels')
 
+        #binary file flag to follow with file location
         group1 = parser.add_argument_group()
         group1.add_argument(
             '-b', metavar='binary', action='append',
             help='Specify binary location for running with Stynamic')
 
-
+        #optional flag if binary requires additional arguments during runtime
         group1.add_argument(
             '-ba', metavar='binary arguments', action='append', required=False,
             help='If binary requires arguments specify here')
 
+        #auto detection of files following a pattern argument
         group2 = parser.add_argument_group()
-
         group2.add_argument(
             '-a',
             required=False,
@@ -60,6 +64,7 @@ class Stynamic():
             nargs='*',
             metavar='pattern',
             help='Have Stynamic automatically determine source file list from the provided pattern(s)')
+        #source code location argument
         group2.add_argument(
             '-f',
             nargs='*',
@@ -71,6 +76,7 @@ class Stynamic():
         #print(self.flags)
         return parser
 
+    #Valgrind wrapper - requires binary file and optionally, binary arguments
     def instValgWrapper(self):
 
         #print(self.flags['b'][0])
@@ -78,22 +84,13 @@ class Stynamic():
         if(self.flags['ba'] != None):
             self.vl.setArgs(self.flags['ba'][0])
 
+    #passing Valgrind arguments 
     def RunValg(self):
         #print('\nRunning analysis\n')
-        #print('Memcheck-No tool Options')
-#        self.vl.runAnlys('mem')
-#        print('\nResults\n')
-#        print(self.vl.getMemResults())
-#        print('Memcheck- tool opt - Leak-Check=Full')
         self.vl.runAnlys('mem', {'lk_ch': 'full'})
-#        print('\nResults\n')
-#        print(self.vl.getMemResults())
-#        print('Memcheck- tool opt - Leak-Check=Full with error flag True')
-#        self.vl.runAnlys('mem', {'lk_ch': 'full'}, True)
-#        print('\nResults\n')
-        #print(self.vl.getMemResults())
         self.vl.parseOutput()
 
+    #dealing with multiple source files for flawfinder
     def flawFileList(self):
         list = []
         try:
@@ -103,7 +100,7 @@ class Stynamic():
                     #print "file:" + file + "\n"
         except TypeError:
             print('')
-
+        #dealing with list of files generated from auto detect
         try:
             for regexlist in self.flags['a']:
                 #print "regexlist:" + str(regexlist) + "\n"
@@ -117,6 +114,7 @@ class Stynamic():
         #print list
         return list
 
+    #Flawfinder wrapper gets passed the appropriate arguments
     def instFlawfWrapper(self, file):
         ffflags = '-c '
         ffargs = file
@@ -130,15 +128,10 @@ class Stynamic():
         self.fw.setFlags(ffflags)
         self.fw.setArgs(ffargs)
         self.fw.runAnalysis()
-        # print('\nBefore Parsing\n')
-        # print(self.fw.getOutPut())
         self.fw.parseOutput()
-        #print('\nAfter Parsing\n')
-       # self.fw.printErrors()
-       # self.fw.printFnc()
-       # self.fw.printFileNames()
         self.flaw_instn.append(self.fw)
 
+    #Prints out results in two column, easily readable format
     def prtyPrntOutBth(self):
         fileSet = set()
         flawOut = {}
@@ -247,27 +240,35 @@ class Stynamic():
                     print("|"+" "*47+"|"+" "*47+"|")
                     continue
 
+#main loop
 def main():
+    #instantiation of Stynamic class
     Styn = Stynamic()
     parser = Styn.parseOpts()
     skip=False
     run=False
+    #branchs dealing with erroneous arguments or specific conditions
+    #need to give files to work with - if not help displayed
     if(Styn.flags['b'] == None and not(Styn.flags['a'] != None or Styn.flags['f'] != None)):
         parser.print_help()
 
+    #only one set of binary arguments can be applied
     if(Styn.flags['ba'] != None and len(Styn.flags['ba']) > 1):
         print("Only one set of binary arguments may be specified\n")
         parser.print_help()
         skip = True
 
+    #if a binary file is given, the dynamic analysis can be done.
     if(Styn.flags['b'] != None and len(Styn.flags['b']) == 1 and not skip):
         Styn.instValgWrapper()
         Styn.RunValg()
         run = True
+    #if anything besides one binary file, error message displayed
     elif(Styn.flags['b'] != None and len(Styn.flags['b']) > 1):
         print("Only one binary may be specified\n")
         parser.print_help()
 
+    #if source files provided, run the static analysis
     if(Styn.flags['a'] != None or Styn.flags['f'] != None and not skip):
         list = Styn.flawFileList()
         for file in list:
@@ -275,6 +276,7 @@ def main():
             Styn.instFlawfWrapper(file)
             run = True
 
+    #print output if analysis was done
     if(run):
         Styn.prtyPrntOutBth()
 

@@ -8,7 +8,6 @@ import shlex
 
 #Found this little cd trick from stackoverflow:
 #http://stackoverflow.com/questions/431684/how-do-i-cd-in-python/13197763#13197763
-
 class cd:
     def __init__(self, newPath):
         self.newPath = os.path.expanduser(newPath)
@@ -21,7 +20,7 @@ class cd:
         os.chdir(self.savedPath)
 
 
-
+#auto installation bash script for getting dependencies autoconf 2.69
 def auto_install():
     comm = ("sudo make prefix=/usr install")
     with cd("./dependencies/autoconf-2.69"):
@@ -29,12 +28,13 @@ def auto_install():
         subprocess.call("make")
         subprocess.call(shlex.split(comm))
 
-
+#install flawfinder 1.31
 def flaw_install():
     comm = ("make prefix=/usr install")
     with cd("./dependencies/flawfinder-1.31"):
         subprocess.call(shlex.split(comm))
 
+#install valgrind 3.12.0
 def val_install():
     comm1 = ("./configure --prefix=/usr")
     comm2 = ("sudo make prefix=/usr install")
@@ -44,6 +44,7 @@ def val_install():
         subprocess.call("make")
         subprocess.call(shlex.split(comm2))
 
+#printing explanation of dependencies installing
 def depend_install():
     print("Installing dependencies")
     print("This may take a few minutes")

@@ -17,6 +17,7 @@ class FlawFinder():
     cHdrFinder = re.compile(r"\w+\.h")
     cppFinder = re.compile(r"\w+\.cpp")
 
+    #variables defined and initiated
     def __init__(self):
         self.args = 'flawfinder '
         self.noErrors = False
@@ -67,6 +68,7 @@ class FlawFinder():
             self.fileName = cppFiles
         self.args = shlex.split(mainArg)
 
+    #piping the output out to be used by the main process
     def runAnalysis(self):
         anlys = subprocess.Popen(self.args, stdout=subprocess.PIPE)
         comm_tuple = anlys.communicate()
@@ -80,6 +82,7 @@ class FlawFinder():
         """
         return self.outPut
 
+    #parsing the output to allow for iteration
     def parseOutput(self):
         endAnalys = re.compile(r'ANALYSIS SUMMARY:')
         anlys = endAnalys.search(self.outPut)
@@ -102,6 +105,7 @@ class FlawFinder():
 
         self.parseBadFnctn()
 
+    #checking the parsing to deal with errors
     def parseBadFnctn(self):
         fncFndr = re.compile(r'(\w+):')
         for key, val in self.errOuts.items():
@@ -136,10 +140,9 @@ class FlawFinder():
         print('\n')
         print(self.fileName)
 
-
+#main loop if the Flawfndr class is not initiated and Flawfndr.py called directly for debugging
 def main():
     ff = FlawFinder()
-    #ff.setArgs('/home/anthony/cyberproj/stynamic/dependencies/valgrind-3.12.0/memcheck/tests/str_tester.c')
     ff.setArgs('./testFiles/client.c')
     ff.runAnalysis()
     print('Before Parsing\n')
