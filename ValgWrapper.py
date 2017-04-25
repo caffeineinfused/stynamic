@@ -203,8 +203,8 @@ class ValWrap():
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             close_fds=True)
-        prog.wait()
-        tempO = prog.stderr.read()
+        comm = prog.communicate()
+        tempO = comm[1]
         if tool == 'mem':
             self.memOut = re.sub(
                 r'(==|--)(\d+)(==|--)',

@@ -155,6 +155,7 @@ class Stynamic():
             f = valIn.file
             w = valIn.what
             l = valIn.line
+            #print ("valerror list entr: " + k + " : " + w)
             valD[l].append(k + " : " + w)
             valOut[f] = valD
             fileSet.add(f)
@@ -198,7 +199,7 @@ class Stynamic():
                 print("| {0:^45} | {1:^45} |".format(sttc.center(40), dyn.center(40)))
                 print("*"*97)
                 for line, error in sorted(vO.items()):
-                    outP = "Line: "+line+"\t\tError: "+error
+                    outP = "Line: "+line+"\t\tError: " + str(error)
                     output = textwrap.wrap(outP, width=40, replace_whitespace=False)
                     blnk = " "
                     for out in output:
