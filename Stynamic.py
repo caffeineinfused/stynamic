@@ -198,11 +198,13 @@ class Stynamic():
                 print("| {0:^45} | {1:^45} |".format(sttc.center(40), dyn.center(40)))
                 print("*"*97)
                 for line, error in sorted(vO.items()):
-                    outP = "Line: "+line+"\t\tError: "+error
+                    outP = "Line: "+line+"\t\tError: "
+                    for ln in error:
+                        outP += ln + "\t\t\t"
                     output = textwrap.wrap(outP, width=40, replace_whitespace=False)
                     blnk = " "
                     for out in output:
-                        print("| {0:<45} | {1:>45} |".format(out.center(40), blnk))
+                        print("| {0:<45} | {1:>45} |".format(blnk, out.center(40)))
                     print("|"+" "*47+"|"+" "*47+"|")
                 continue
 
@@ -268,7 +270,7 @@ def main():
         for file in list:
             Styn.fw = FlawFndr.FlawFinder()
             Styn.instFlawfWrapper(file)
-    
+
     Styn.prtyPrntOutBth()
 
 if __name__ == '__main__':
