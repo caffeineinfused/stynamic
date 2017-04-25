@@ -251,6 +251,7 @@ def main():
     Styn = Stynamic()
     parser = Styn.parseOpts()
     skip=False
+    run=False
     if(Styn.flags['b'] == None and not(Styn.flags['a'] != None or Styn.flags['f'] != None)):
         parser.print_help()
 
@@ -262,6 +263,7 @@ def main():
     if(Styn.flags['b'] != None and len(Styn.flags['b']) == 1 and not skip):
         Styn.instValgWrapper()
         Styn.RunValg()
+        run = True
     elif(Styn.flags['b'] != None and len(Styn.flags['b']) > 1):
         print("Only one binary may be specified\n")
         parser.print_help()
@@ -271,8 +273,10 @@ def main():
         for file in list:
             Styn.fw = FlawFndr.FlawFinder()
             Styn.instFlawfWrapper(file)
+            run = True
 
-    Styn.prtyPrntOutBth()
+    if(run):
+        Styn.prtyPrntOutBth()
 
 if __name__ == '__main__':
     main()
